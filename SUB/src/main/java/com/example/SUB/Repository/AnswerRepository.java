@@ -13,9 +13,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer,Integer> {
 
-    Page<Answer> findAll(Specification<Answer> spec, Pageable pageable);
-    @Query("SELECT a FROM Answer a LEFT JOIN a.voter v WHERE a.question = :question GROUP BY a.id ORDER BY COUNT(v) DESC")
-    Page<Answer> findAllByQuestionOrderByVoterCountDesc(@Param("question") Question question, Pageable pageable);
+    Page<Answer> findAllByQuestion(Question question, Pageable pageable);
+
+    @Query("SELECT e "
+            + "FROM Answer e "
+            + "WHERE e.question = :question "
+            + "ORDER BY SIZE(e.voter) DESC, e.createdate")
+    Page<Answer> findAllByQuestionOrderByVoter(@Param("question") Question question, Pageable pageable);
 
 
 }

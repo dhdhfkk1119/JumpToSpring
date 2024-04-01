@@ -31,5 +31,4 @@ public class Answer {
     Set<SiteUser> voter;
 
     private LocalDateTime modifydate;
-
 }

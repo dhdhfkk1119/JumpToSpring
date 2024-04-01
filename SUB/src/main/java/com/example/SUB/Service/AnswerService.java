@@ -66,36 +66,26 @@ public class AnswerService {
 
 
     // 댓글 페이지 가져오기
-    public Page<Answer> getAnswerList(Question question, int page, String sort, String kw) {
+    public Page<Answer> getAnswerPage(Question question, int page, String sort) {
         Pageable pageable;
-        Specification<Answer> spec;
 
-        if ("voter".equalsIgnoreCase(sort)) {
-            pageable = PageRequest.of(page, 10);
-            spec = (root, query, criteriaBuilder) -> {
-                Join<Answer, SiteUser> voterJoin = root.join("voter", JoinType.LEFT);
-                query.groupBy(root.get("id"));
-                query.orderBy(criteriaBuilder.desc(criteriaBuilder.count(voterJoin)));
-                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
-            };
-        } else {
+        // 최신순
+        if (sort.equals("createdate")) {
             List<Sort.Order> sorts = new ArrayList<>();
             sorts.add(Sort.Order.desc("createdate"));
-            pageable = PageRequest.of(page, 10, Sort.by(sorts));
-
-            // 여기서 검색 조건을 만듭니다.
-            spec = (root, query, criteriaBuilder) -> {
-                // 예시: 답변 내용(content)에 대한 Like 검색
-                if (kw != null && !kw.isEmpty()) {
-                    String pattern = "%" + kw + "%";
-                    return criteriaBuilder.like(root.get("content"), pattern);
-                }
-                // 만약 다른 검색 조건이 필요하다면 여기에 추가할 수 있습니다.
-                return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
-            };
+            pageable = PageRequest.of(page, 10, Sort.by(sorts)); //페이지 번호, 개수
+            return answerRepository.findAllByQuestion(question, pageable);
         }
 
-        return this.answerRepository.findAll(spec, pageable);
+        // 추천순, 기본
+        else {
+            pageable = PageRequest.of(page, 10); // 페이지네이션 정보
+            // 추천순 : 10개에 페이지정보만 주면 알아서
+            if (sort.equals("voter"))
+                return answerRepository.findAllByQuestionOrderByVoter(question, pageable);
+            // 기본
+            return answerRepository.findAllByQuestion(question, pageable);
+        }
     }
 
 

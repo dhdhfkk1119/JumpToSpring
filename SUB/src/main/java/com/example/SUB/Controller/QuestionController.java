@@ -49,16 +49,13 @@ public class QuestionController {
         return "question_list";
     }
 
-    @GetMapping(value = "/detail/{id}")
-    public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm,
-                         @RequestParam(value = "page", defaultValue = "0") int page,
-                         @RequestParam(value = "kw", defaultValue = "") String kw,
-                         @RequestParam(value = "sort" , defaultValue = "") String sort) {
-        Question question = this.questionService.getQuestion(id);
-        Page<Answer> paging =  this.answerService.getAnswerList(question, page,sort,kw);
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable Integer id, AnswerForm answerForm,
+                         @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "") String sort) {
+        Question question = questionService.getQuestion(id);
+        Page<Answer> paging = answerService.getAnswerPage(question, page, sort);
         model.addAttribute("question", question);
         model.addAttribute("paging", paging);
-        model.addAttribute("sort", sort); // 추가: sort 파라미터 전달
         return "question_detail";
     }
 
