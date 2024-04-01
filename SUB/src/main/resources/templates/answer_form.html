@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--form th:action 삭제 하면 csrf값이 자동으로 생성되지 않는다 input hidden 필수-->
+<!--CSRF값을 수동으로라도 추가해야 되는 이유는 스프링 시큐리티(Spring Security)를 사용할 때 CSRF 값이 반드시 필요하기 때문이다. -->
+<div layout:fragment="content" class="container">
+    <h5 class="my-3 border-bottom pb-2">답변 수정</h5>
+    <form th:object="${answerForm}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+        <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
+        </div>
+        <input type="submit" value="저장하기" class="btn btn-primary my-2">
+    </form>
+</div>
+</body>
+</html>

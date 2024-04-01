@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout}"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div layout:fragment="content" class="container my-3">
+    <div class="row my-3">
+        <div class="col-6">
+            <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
+        </div>
+        <div class="col-6">
+            <div class="input-group">
+                <input type="text" id="search_kw" class="form-control" th:value="${kw}">
+                <button class="btn btn-outline-secondary" type="button" id="btn_search">찾기</button>
+            </div>
+        </div>
+    </div>
+    <table class="table">
+        <thead class="table-dark">
+        <tr class="text-center">
+            <th>번호</th>
+            <th style="width:50%">제목</th>
+            <th>글쓴이</th>
+            <th>작성일시</th>
+            <th>조회수</th>
+            <th>추천수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="text-center" th:each="question, loop : ${paging}">
+            <!-- 게시글  번호 -->
+            <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+            <!-- 게시글  제목 및 댓글 수 -->
+            <td class="text-start">
+                <!-- 게시글  제목 -->
+                <a th:href="@{|/question/detail/${question.id}|}" th:text="${question.subject}"></a>
+                <!-- 게시글  댓글 수 -->
+                <span class="text-danger small ms-2" th:if="${#lists.size(question.answerList) > 0}" th:text="${#lists.size(question.answerList)}"></span>
+            </td>
+            <!-- 게시글  작성자 -->
+            <td><span th:if="${question.author != null}" th:text="${question.author.username}"></span></td>
+            <!-- 게시글  작성일시 -->
+            <td th:text="${#temporals.format(question.createdate, 'yyyy-MM-dd HH:mm')}"></td>
+            <!-- 게시글   조회수 -->
+            <td th:text="${question.view}"></td>
+            <!-- 게시글   추천수 -->
+            <td th:text="${#lists.size(question.voter)}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- 카테고리 분류 -->
+    <div>
+        <ul class="nav d-flex align-items-baseline gap-2">
+            <li class="nav-item">
+                <a class="nav-link btn btn-primary text-white"
+                   th:classappend="${#strings.equals(param.sort,'answerList')} ? 'active'"
+                   th:href="@{|?sort=answerList&page=${paging.number}|}">댓글순</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-primary text-white" th:classappend="${#strings.equalsIgnoreCase(param.sort, 'view')} ? 'active'" th:href="@{|?sort=view&page=${paging.number}|}">조회순</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link btn btn-primary text-white" th:classappend="${#strings.equals(param.sort, 'voter')} ? 'active'" th:href="@{|?sort=voter&page=${paging.number}|}">추천순</a>
+            </li>
+        </ul>
+    </div>
+    <!-- 페이징처리 시작  이전 및 다음 버튼  -->
+    <div th:if="${!paging.isEmpty()}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${!paging.hasPrevious} ? 'disabled'">
+                <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number-1}">
+                    <span>이전</span>
+                </a>
+            </li>
+            <li th:each="page: ${#numbers.sequence(0, paging.totalPages-1)}"
+                th:if="${page >= paging.number-5 and page <= paging.number+5}"
+                th:classappend="${page == paging.number} ? 'active'" class="page-item">
+                <a th:text="${page}" class="page-link" href="javascript:void(0)" th:data-page="${page}"></a>
+            </li>
+            <li class="page-item" th:classappend="${!paging.hasNext} ? 'disabled'">
+                <a class="page-link" href="javascript:void(0)" th:data-page="${paging.number+1}">
+                    <span>다음</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- 페이징처리 끝 -->
+    <!-- 검색기능 폼으로 보내기 시작 -->
+    <form th:action="@{/question/list}" method="get" id="searchForm">
+        <input type="hidden" id="kw" name="kw" th:value="${kw}">
+        <input type="hidden" id="page" name="page" th:value="${paging.number}">
+    </form>
+    <!-- 검색기능 폼으로 보내기 끝 -->
+</div>
+</body>
+</html>
+<script layout:fragment="script" type='text/javascript'>
+    const page_elements = document.getElementsByClassName("page-link");
+    Array.from(page_elements).forEach(function (element) {
+        element.addEventListener('click', function () {
+            document.getElementById('page').value = this.dataset.page;
+            document.getElementById('searchForm').submit();
+        });
+    });
+    const btn_search = document.getElementById("btn_search");
+    btn_search.addEventListener('click', function () {
+        document.getElementById('kw').value = document.getElementById('search_kw').value;
+        document.getElementById('page').value = 0;  // 검색버튼을 클릭할 경우 0페이지부터 조회한다.
+        document.getElementById('searchForm').submit();
+    });
+</script>
