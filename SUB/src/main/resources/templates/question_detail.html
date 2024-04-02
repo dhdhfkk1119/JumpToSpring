@@ -63,10 +63,10 @@
     <div>
         <ul class="nav d-flex align-items-baseline gap-2">
             <span>정렬 기준</span>
-            <li class="nav-item">
+            <li class="nav-item" style="background-color: #6e7691; border-radius: 6px">
                 <a class="nav-link btn btn-primary text-white" th:classappend="${#strings.equalsIgnoreCase(param.sort, 'voter')} ? 'active'" th:href="@{|?sort=voter&page=${paging.number}|}">추천순</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="background-color: #6e7691; border-radius: 6px">
                 <a class="nav-link btn btn-primary text-white" th:classappend="${#strings.equalsIgnoreCase(param.sort, 'createdate')} ? 'active'" th:href="@{|?sort=createdate&page=${paging.number}|}">최신순</a>
             </li>
         </ul>

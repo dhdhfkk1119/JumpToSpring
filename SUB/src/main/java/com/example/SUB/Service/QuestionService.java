@@ -60,7 +60,7 @@ public class QuestionService {
 
     }
         
-    // page에 관한 설명 , page 정보 , 정렬 방식
+    // page에 관한 설명 , page 정보 , 정렬 방식 추가
     public Page<Question> getList(int page, String kw, String sort) {
         List<Sort.Order> sorts = new ArrayList<>();
 

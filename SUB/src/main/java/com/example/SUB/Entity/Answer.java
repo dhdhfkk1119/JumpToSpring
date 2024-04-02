@@ -26,9 +26,12 @@ public class Answer {
     @ManyToOne
     private SiteUser author;
 
+    private LocalDateTime modifydate;
+
     //Set 자료형은 중복이 안됨 그렇기에 개인당 추천한번
     @ManyToMany
-    Set<SiteUser> voter;
-
-    private LocalDateTime modifydate;
+    @JoinTable(name = "answer_voter",
+            joinColumns = @JoinColumn(name = "answer_id"),
+            inverseJoinColumns = @JoinColumn(name = "voter_id"))
+    private Set<SiteUser> voter;
 }

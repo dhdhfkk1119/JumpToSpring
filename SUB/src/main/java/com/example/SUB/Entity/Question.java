@@ -33,9 +33,6 @@ public class Question {
     @ManyToOne
     private SiteUser author;
 
-    @ManyToMany
-    Set<SiteUser> voter;
-
     private LocalDateTime modifydate;
 
     @Column(columnDefinition = "integer default 0", nullable = false)
@@ -46,5 +43,9 @@ public class Question {
         return this.view != null ? this.view : 0; // 만약 view가 null이면 0을 반환하도록 수정
     }
 
-
+    @ManyToMany
+    @JoinTable(name = "question_voter",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "voter_id"))
+    private Set<SiteUser> voter;
 }

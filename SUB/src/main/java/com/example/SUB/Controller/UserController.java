@@ -1,19 +1,25 @@
 package com.example.SUB.Controller;
 
 import com.example.SUB.DTO.UserCreateForm;
+import com.example.SUB.Entity.SiteUser;
 import com.example.SUB.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.apache.catalina.User;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+
+import java.security.Principal;
 
 @RequiredArgsConstructor
 @Controller
@@ -64,4 +70,5 @@ public class UserController {
 
         return "redirect:/";
     }
+
 }
