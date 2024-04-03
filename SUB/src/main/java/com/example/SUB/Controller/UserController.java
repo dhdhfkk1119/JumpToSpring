@@ -80,8 +80,15 @@ public class UserController {
         return "redirect:/";
     }
 
+    @GetMapping("/page")
+    public String Userpage(){
+
+        return "/userpage";
+    }
+
+    // 로그인시에 username 정보를 가져온다.
     @GetMapping("/user")
-    public String welcomeUser() {
+    public String Username() {
         // SecurityContext에서 Authentication 객체를 가져옵니다.
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
