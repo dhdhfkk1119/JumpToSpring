@@ -26,8 +26,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
+                    <p class="nav-link" sec:authorize="isAuthenticated()" th:text="${#authentication.name}">사용자</p>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-                    <h1><p class="nav-link"><span sec:authorize="isAuthenticated()" th:text="${username}"></span></p>!!</h1>
                     <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
                 </li>
                 <li class="nav-item">

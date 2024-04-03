@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.apache.catalina.User;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,14 @@ public class UserController {
     @GetMapping("/signup")
     public String signup(UserCreateForm userCreateForm) {
         return "signup_form";
+    }
+
+    @GetMapping("/username")
+    @ResponseBody
+    public String currentUserName(Principal principal,Model model)
+    {
+        model.addAttribute("username",principal.getName());
+        return principal.getName();
     }
 
     @GetMapping("/login")
@@ -69,6 +78,24 @@ public class UserController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/user")
+    public String welcomeUser() {
+        // SecurityContext에서 Authentication 객체를 가져옵니다.
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String message;
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            // 로그인한 사용자의 사용자 이름을 가져옵니다.
+            String currentUserName = authentication.getName();
+            // 사용자 이름을 환영 메시지에 포함합니다.
+            message = "안녕하세요, " + currentUserName + "님!";
+        } else {
+            message = "안녕하세요, 게스트님!";
+        }
+
+        return message;
     }
 
 }
