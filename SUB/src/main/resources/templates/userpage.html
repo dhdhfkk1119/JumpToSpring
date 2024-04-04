@@ -8,9 +8,16 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="container p-5 my-5 border">
-        <h1>UserInfo</h1>
-        <p>이 컨테이너는 테두리 및 추가 패딩 및 여백이 포함되어 있습니다.</p>
+    <div class="container small p-5 my-5 border d-md-grid">
+        <div class="col-4 row-4">
+            <img src="#" alt="#" width="50px">
+        </div>
+        <div class="col-4 row-2">
+            <span class="nav-link" sec:authorize="isAuthenticated()" th:text="${#authentication.name}" th:href="@{/user/page}">사용자</span>
+        </div>
+        <div class="col-4 row-2">
+            <span class="nav-link" sec:authorize="isAuthenticated()" th:text="${#authentication.name}" th:href="@{/user/page}">사용자</span>
+        </div>
     </div>
     <div class="container p-5 my-5 border">
         <h1>My Question</h1>
